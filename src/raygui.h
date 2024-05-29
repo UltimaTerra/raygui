@@ -405,7 +405,7 @@
     } Rectangle;
 
     // TODO: Texture2D type is very coupled to raylib, required by Font type
-    // It should be redesigned to be provided by user
+    // It should be redesigned to be provided by user (!!!!)
     typedef struct Texture2D {
         unsigned int id;        // OpenGL texture id
         int width;              // Texture base width
@@ -433,7 +433,7 @@
     } GlyphInfo;
 
     // TODO: Font type is very coupled to raylib, mostly required by GuiLoadStyle()
-    // It should be redesigned to be provided by user
+    // It should be redesigned to be provided by user (!!!!)
     typedef struct Font {
         int baseSize;           // Base size (default chars height)
         int glyphCount;         // Number of glyph characters
@@ -2500,7 +2500,7 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
 
     // Update control
     //--------------------------------------------------------------------
-    // WARNING: Text editing is only supported under certain conditions:
+    // WARNING: Text editing is only supported under certain conditions: (!?!)
     if ((state != STATE_DISABLED) &&                // Control not disabled
         !GuiGetStyle(TEXTBOX, TEXT_READONLY) &&     // TextBox not on read-only mode
         !guiLocked &&                               // Gui not locked
@@ -2536,7 +2536,7 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
             const char *charEncoded = CodepointToUTF8(codepoint, &codepointSize);
 
             // Add codepoint to text, at current cursor position
-            // NOTE: Make sure we do not overflow buffer size
+            // NOTE: Make sure we do not overflow buffer size (!!)
             if (((multiline && (codepoint == (int)'\n')) || (codepoint >= 32)) && ((textLength + codepointSize) < textSize))
             {
                 // Move forward data from cursor position
@@ -3713,7 +3713,7 @@ int GuiColorPicker(Rectangle bounds, const char *text, Color *color)
 //      int GuiColorPanelHSV(Rectangle bounds, const char *text, Vector3 *colorHsv)
 //      int GuiColorBarAlpha(Rectangle bounds, const char *text, float *alpha)
 //      float GuiColorBarHue(Rectangle bounds, float value)
-// NOTE: bounds define GuiColorPanelHSV() size
+// NOTE: bounds define GuiColorPanelHSV() size   (!???)
 int GuiColorPickerHSV(Rectangle bounds, const char *text, Vector3 *colorHsv)
 {
     int result = 0;
@@ -3888,7 +3888,7 @@ int GuiMessageBox(Rectangle bounds, const char *title, const char *message, cons
     return result;
 }
 
-// Text Input Box control, ask for text
+// Text Input Box control, ask for text 
 int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, const char *buttons, char *text, int textMaxSize, bool *secretViewActive)
 {
     #if !defined(RAYGUI_TEXTINPUTBOX_BUTTON_HEIGHT)
@@ -3902,7 +3902,7 @@ int GuiTextInputBox(Rectangle bounds, const char *title, const char *message, co
     #endif
 
     // Used to enable text edit mode
-    // WARNING: No more than one GuiTextInputBox() should be open at the same time
+    // WARNING: No more than one GuiTextInputBox() should be open at the same time (??!)
     static bool textEditMode = false;
 
     int result = -1;
@@ -4059,7 +4059,7 @@ void GuiSetTooltip(const char *tooltip) { guiTooltipPtr = tooltip; }
 
 // Load raygui style file (.rgs)
 // NOTE: By default a binary file is expected, that file could contain a custom font,
-// in that case, custom font image atlas is GRAY+ALPHA and pixel data can be compressed (DEFLATE)
+// in that case, custom font image atlas is GRAY+ALPHA and pixel data can be compressed (DEFLATE) (!!!!)
 void GuiLoadStyle(const char *fileName)
 {
     #define MAX_LINE_BUFFER_SIZE    256
@@ -4422,7 +4422,7 @@ void GuiSetIconScale(int scale)
 //----------------------------------------------------------------------------------
 
 // Load style from memory
-// WARNING: Binary files only
+// WARNING: Binary files only (!!)
 static void GuiLoadStyleFromMemory(const unsigned char *fileData, int dataSize)
 {
     unsigned char *fileDataPtr = (unsigned char *)fileData;
@@ -4850,8 +4850,8 @@ static void GuiDrawText(const char *text, Rectangle textBounds, int alignment, C
     //   - For every line, wordwrap mode is checked (useful for GuitextBox(), read-only)
 
     // Get text lines (using '\n' as delimiter) to be processed individually
-    // WARNING: We can't use GuiTextSplit() function because it can be already used
-    // before the GuiDrawText() call and its buffer is static, it would be overriden :(
+    // WARNING: We can't use GuiTextSplit() function because it can be already used ()!?!
+    // before the GuiDrawText() call and its buffer is static, it would be overriden :(     (!!!)
     int lineCount = 0;
     const char **lines = GetTextLines(text, &lineCount);
 
@@ -4860,7 +4860,7 @@ static void GuiDrawText(const char *text, Rectangle textBounds, int alignment, C
     int alignmentVertical = GuiGetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL);
     int wrapMode = GuiGetStyle(DEFAULT, TEXT_WRAP_MODE);    // Wrap-mode only available in read-only mode, no for text editing
 
-    // TODO: WARNING: This totalHeight is not valid for vertical alignment in case of word-wrap
+    // TODO: WARNING: This totalHeight is not valid for vertical alignment in case of word-wrap (!!!)
     float totalHeight = (float)(lineCount*GuiGetStyle(DEFAULT, TEXT_SIZE) + (lineCount - 1)*GuiGetStyle(DEFAULT, TEXT_SIZE)/2);
     float posOffsetY = 0.0f;
 
@@ -5106,7 +5106,7 @@ static const char **GuiTextSplit(const char *text, char delimiter, int *count, i
     //      2. Maximum size of text to split is RAYGUI_TEXTSPLIT_MAX_TEXT_SIZE
     // NOTE: Those definitions could be externally provided if required
 
-    // TODO: HACK: GuiTextSplit() - Review how textRows are returned to user
+    // TODO: HACK: GuiTextSplit() - Review how textRows are returned to user (!!!)
     // textRow is an externally provided array of integers that stores row number for every splitted string
 
     #if !defined(RAYGUI_TEXTSPLIT_MAX_ITEMS)
@@ -5153,7 +5153,7 @@ static const char **GuiTextSplit(const char *text, char delimiter, int *count, i
 }
 
 // Convert color data from RGB to HSV
-// NOTE: Color data should be passed normalized
+// NOTE: Color data should be passed normalized (??)
 static Vector3 ConvertRGBtoHSV(Vector3 rgb)
 {
     Vector3 hsv = { 0 };
@@ -5191,7 +5191,7 @@ static Vector3 ConvertRGBtoHSV(Vector3 rgb)
     }
 
     // NOTE: Comparing float values could not work properly
-    if (rgb.x >= max) hsv.x = (rgb.y - rgb.z)/delta;    // Between yellow & magenta
+    if (rgb.x >= max) hsv.x = (rgb.y - rgb.z)/delta;    // Between yellow & magenta (???)
     else
     {
         if (rgb.y >= max) hsv.x = 2.0f + (rgb.z - rgb.x)/delta;  // Between cyan & yellow
@@ -5563,7 +5563,7 @@ const char **TextSplit(const char *text, char delimiter, int *count)
 }
 
 // Get integer value from text
-// NOTE: This function replaces atoi() [stdlib.h]
+// NOTE: This function replaces atoi() [stdlib.h] (!!!)
 static int TextToInteger(const char *text)
 {
     int value = 0;
@@ -5582,7 +5582,7 @@ static int TextToInteger(const char *text)
 
 // Get float value from text
 // NOTE: This function replaces atof() [stdlib.h]
-// WARNING: Only '.' character is understood as decimal point
+// WARNING: Only '.' character is understood as decimal point )!!!
 static float TextToFloat(const char *text)
 {
     float value = 0.0f;
@@ -5652,8 +5652,8 @@ static const char *CodepointToUTF8(int codepoint, int *byteSize)
 // Get next codepoint in a UTF-8 encoded text, scanning until '\0' is found
 // When a invalid UTF-8 byte is encountered we exit as soon as possible and a '?'(0x3f) codepoint is returned
 // Total number of bytes processed are returned as a parameter
-// NOTE: the standard says U+FFFD should be returned in case of errors
-// but that character is not supported by the default font in raylib
+// NOTE: the standard says U+FFFD should be returned in case of errors (?!!!)
+// but that character is not supported by the default font in raylib (!!!)
 static int GetCodepointNext(const char *text, int *codepointSize)
 {
     const char *ptr = text;
@@ -5693,4 +5693,4 @@ static int GetCodepointNext(const char *text, int *codepointSize)
 }
 #endif      // RAYGUI_STANDALONE
 
-#endif      // RAYGUI_IMPLEMENTATION
+#endif      // RAYGUI_IMPLEMENTATION (!!)
